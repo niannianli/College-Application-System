@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<bean id="MenuDaoImpl" class="com.college.dao.MenuDaoImpl">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+	<bean id="RoleDaoImpl" class="com.college.dao.RoleDaoImpl">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+	<bean id="UserDaoImpl" class="com.college.dao.UserDaoImpl">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+    <property name="url" value="jdbc:mysql://localhost:3306/webdb" />
+    <property name="username" value="root" />
+    <property name="password" value="love" />
+	</bean>
+
+	<context:property-placeholder location="jdbc.properties" />
+
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<!-- retrieve thousands of entiry classes in this package -->
+		<property name="packagesToScan">
+			<list>
+				<value>com.college</value>
+			</list>
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<!-- understand mysql query language: not other like oracle -->
+				<!-- convert java to mysql -->
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+				<prop key="hibernate.show.sql">true</prop>
+				<prop key="hibernate.hbm2dll.auto">update</prop>
+				<!-- insert lots of data, not one by one, just same operation add to 
+					batch, and execute once for all -->
+				<prop key="hibernate.jdbc.batch_size">50</prop>
+			</props>
+		</property>
+	</bean>
+	
+</beans>
